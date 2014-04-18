@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stateMachine start="idle">
+	<event name="doorClosed" code="D1CL" />
+	<event name="drawerOpened" code="D2OP" />
+	<event name="lightOn" code="L1ON" />
+	<event name="doorOpened" code="D1OP" />
+	<event name="panelClosed" code="PNCL" />
+	<command name="unlockPanel" code="PNUL" />
+	<command name="lockPanel" code="PNLK" />
+	<command name="lockDoor" code="D1LK" />
+	<command name="unlockDoor" code="D1UL" />
+	<state name="idle">
+		<transition event="doorClosed" target="active" />
+		<action command="unlockDoor" />
+		<action command="lockPanel" />
+	</state>
+	<state name="active">
+		<transition event="drawerOpened" target="waitingForLight" />
+		<transition event="lightOn" target="waitingForDrawer" />
+	</state>
+	<state name="waitingForLight">
+		<transition event="lightOn" target="unlockedPanel" />
+	</state>
+	<state name="waitingForDrawer">
+		<transition event="drawerOpened" target="unlockedPanel" />
+	</state>
+	<state name="unlockedPanel">
+		<action command="unlockPanel" />
+		<action command="lockDoor" />
+		<transition event="panelClosed" target="idle" />
+	</state>
+	<resetEvent name="doorOpened" />
+</stateMachine>
